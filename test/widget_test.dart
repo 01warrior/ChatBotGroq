@@ -1,30 +1,40 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:chatscreen/main.dart';
+import 'package:chatscreen/models/message.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Message Model Tests', () {
+    test('Message creation', () {
+      final message = Message(role: 'user', content: 'Hello');
+      expect(message.role, 'user');
+      expect(message.content, 'Hello');
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('Message copyWith', () {
+      final message = Message(role: 'user', content: 'Hello');
+      final updated = message.copyWith(content: 'Hi');
+      expect(updated.role, 'user');
+      expect(updated.content, 'Hi');
+    });
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('ChatApp renders correctly', (WidgetTester tester) async {
+    // Build the app
+    await tester.pumpWidget(const ChatApp());
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Vérifier que l'AppBar est présente
+    expect(find.text('AI Assistant'), findsOneWidget);
+
+    // Vérifier que l'écran de bienvenue est affiché (liste vide)
+    expect(find.text('Bienvenue dans votre assistant IA !'), findsOneWidget);
+  });
+
+  testWidgets('Welcome screen shows suggestions', (WidgetTester tester) async {
+    await tester.pumpWidget(const ChatApp());
+    await tester.pumpAndSettle(); // Attendre que l'animation se termine
+
+    // Vérifier qu'une suggestion est présente
+    expect(find.text('Bonjour, comment allez-vous ?'), findsOneWidget);
   });
 }

@@ -2,8 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:chatscreen/models/message.dart';
 import 'package:chatscreen/services/api_service.dart';
-import 'package:chatscreen/widgets/chat_bubble.dart';
 import 'package:chatscreen/widgets/chat_input.dart';
+import 'package:chatscreen/widgets/chat_list.dart';
+import 'package:chatscreen/widgets/welcome_screen.dart';
+import 'package:chatscreen/config.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 void main() => runApp(const ChatApp());
 
@@ -17,7 +20,7 @@ class ChatApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+          seedColor: Colors.blue,
           brightness: Brightness.light,
         ),
         useMaterial3: true,
@@ -38,19 +41,33 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<Message> _messages = [];
   final ApiService _apiService = ApiService();
   bool _isLoading = false;
+  String _selectedModel = AppConfig.defaultModel;
+
+  final List<String> _suggestions = [
+    "Parlez-moi de vous.",
+    "Donne-moi une astuce de productivité.",
+    "Recommande-moi un film ou une série à regarder.",
+  ];
 
   Future<void> _sendMessage(String text) async {
     if (text.isEmpty || _isLoading) return;
 
     setState(() {
-      _messages.add(Message(user: text, ai: ''));
+      _messages.add(Message(role: 'user', content: text));
       _isLoading = true;
     });
 
+    // Build conversation history
+    List<Map<String, dynamic>> conversation = [];
+    for (var msg in _messages) {
+      conversation.add({"role": msg.role, "content": msg.content});
+    }
+
     try {
-      final response = await _apiService.sendMessage(text);
+      final response =
+          await _apiService.sendMessage(conversation, _selectedModel);
       setState(() {
-        _messages.last = _messages.last.copyWith(ai: response);
+        _messages.add(Message(role: 'assistant', content: response));
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,32 +82,41 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Assistant'),
-        centerTitle: true,
+        title: const Text('01WARRIOR'),
+        centerTitle: false,
+        actions: [
+          Text(
+            _selectedModel.split('/').last,
+            style: const TextStyle(fontSize: 16, color: Colors.black87),
+          ),
+          PopupMenuButton<String>(
+            onSelected: (String model) {
+              setState(() {
+                _selectedModel = model;
+              });
+            },
+            itemBuilder: (BuildContext context) {
+              return AppConfig.availableModels.map((String model) {
+                return PopupMenuItem<String>(
+                  value: model,
+                  child: Text(model),
+                );
+              }).toList();
+            },
+            icon:
+                const Icon(FluentIcons.brain_24_regular, color: Colors.black87),
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
-            child: CustomScrollView(
-              reverse: true,
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final message = _messages.reversed.toList()[index];
-                        return ChatBubble(
-                          message: message,
-                          isUser: message.ai.isEmpty,
-                        );
-                      },
-                      childCount: _messages.length,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: _messages.isEmpty
+                ? WelcomeScreen(
+                    suggestions: _suggestions,
+                    onSuggestionTap: _sendMessage,
+                  )
+                : ChatList(messages: _messages),
           ),
           ChatInput(
             onSend: _sendMessage,

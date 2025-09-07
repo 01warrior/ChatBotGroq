@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 class ChatInput extends StatefulWidget {
   final Function(String) onSend;
@@ -28,7 +29,7 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
@@ -50,7 +51,8 @@ class _ChatInputState extends State<ChatInput> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               ),
               onSubmitted: (_) => _handleSubmit(),
               enabled: !widget.isLoading,
@@ -71,7 +73,8 @@ class _ChatInputState extends State<ChatInput> {
                       color: Colors.white,
                       strokeWidth: 2,
                     )
-                  : const Icon(Icons.send, color: Colors.white),
+                  : const Icon(FluentIcons.send_24_regular,
+                      color: Colors.white),
               onPressed: widget.isLoading ? null : _handleSubmit,
             ),
           ),

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
+/// Represents a message in the chat.
 @immutable
 class Message {
-  final String user;
-  final String ai;
+  final String role;
+  final String content;
 
   const Message({
-    required this.user,
-    required this.ai,
+    required this.role,
+    required this.content,
   });
 
-  Message copyWith({String? user, String? ai}) {
+  Message copyWith({String? role, String? content}) {
     return Message(
-      user: user ?? this.user,
-      ai: ai ?? this.ai,
+      role: role ?? this.role,
+      content: content ?? this.content,
     );
   }
 }
