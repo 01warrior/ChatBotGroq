@@ -1,18 +1,19 @@
-# chatscreen
+ChatScreen
 
-A new Flutter project.
+Projet Flutter minimaliste conçu comme base pour intégrer un chatbot.
 
-## Getting Started
+Caractéristiques
 
-This project is a starting point for a Flutter application.
+Interface de conversation prête à l’emploi
 
-A few resources to get you started if this is your first Flutter project:
+Intégration d’un modèle IA via HTTP
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Structure modulaire pour étendre la logique métier
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Code clair et adaptable à n’importe quel backend
+
+Objectif
+
+Fournir une base technique réutilisable pour prototyper, expérimenter ou construire un système de chat intelligent en Flutter.
 
 <img width="779" height="768" alt="Capture d&#39;écran 2025-09-07 224456" src="https://github.com/user-attachments/assets/8834ba7d-a465-4af4-95c0-5bf2ebee4ce5" />
