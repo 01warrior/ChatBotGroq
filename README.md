@@ -1,5 +1,7 @@
 # ChatScreen
 
+<img width="779" height="768" alt="Capture d&#39;écran 2025-09-07 224456" src="https://github.com/user-attachments/assets/8834ba7d-a465-4af4-95c0-5bf2ebee4ce5" />
+
 Projet Flutter minimaliste servant de base pour intégrer un chatbot et expérimenter des modèles IA.
 
 ## Description
@@ -30,5 +32,3 @@ lib/
    └─ message_bubble.dart
 
 
-
-<img width="779" height="768" alt="Capture d&#39;écran 2025-09-07 224456" src="https://github.com/user-attachments/assets/8834ba7d-a465-4af4-95c0-5bf2ebee4ce5" />
